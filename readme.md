@@ -1,7 +1,3 @@
-```python
-
-```
-
 # PipeChain
 
 ## Motivation
@@ -245,3 +241,16 @@ PipeChain(["a", "b", "c"]).pipe(getitem, 1).eval()
     'b'
 
 
+
+## Test Suite
+
+Note, you will need poetry installed.
+
+To run the test suite, use:
+
+```bash
+git clone https://github.com/multimeric/PipeChain.git
+cd PipeChain
+poetry install
+poetry run pytest test/test.py
+```

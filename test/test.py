@@ -62,7 +62,7 @@ def test_pipe_builtins():
         # Convert to list
         list
     ).eval()
-    assert res == ["X2", "X4", "Y"]
+    assert res == ["X0", "X2", "X4", "Y"]
 
 def test_pipe_numpy():
     import numpy as np
