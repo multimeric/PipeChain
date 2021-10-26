@@ -194,7 +194,9 @@ PipeChain(2).pipe(pow, 3, _).eval()
 
 
 ### Methods
-It might not see like methods will play that well with this pipe convention, but after all, they are just functions:
+It might not see like methods will play that well with this pipe convention, but after all, they are just functions.
+You should be able to access any object's method as a function by accessing it on that object's parent class.
+In the below example, `str` is the parent class of "":
 
 
 ```python
