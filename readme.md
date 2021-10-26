@@ -156,12 +156,26 @@ By default, the previous value is passed as the first positional argument to the
 PipeChain(2).pipe(pow, 3).eval()
 ```
 
+
+
+
+    8
+
+
+
 The only magic here is that if you use the `PLACEHOLDER` variable as an argument to `.pipe()`, then the pipeline will replace it with the output of the previous pipe at runtime:
 
 
 ```python
 PipeChain(2).pipe(pow, 3, PLACEHOLDER).eval()
 ```
+
+
+
+
+    9
+
+
 
 Note that you can rename `PLACEHOLDER` to something more usable using Python's import statement, e.g.
 
@@ -171,6 +185,13 @@ from pipechain import PLACEHOLDER as _
 PipeChain(2).pipe(pow, 3, _).eval()
 
 ```
+
+
+
+
+    9
+
+
 
 ### Methods
 It might not see like methods will play that well with this pipe convention, but after all, they are just functions:
