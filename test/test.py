@@ -3,50 +3,10 @@ from itertools import chain
 import operator
 
 
-def test_example():
-    from pipechain import PipeChain, PLACEHOLDER as _
-
-    nums = [
-        "493225813",
-        "0491 570 156",
-        "55505488",
-        "Barry",
-        "02 5550 7491",
-        "491570156",
-        "",
-        "1800 975 707",
-    ]
-
-    assert PipeChain(nums).pipe(
-        # Remove spaces
-        map,
-        lambda x: x.replace(" ", ""),
-        _,
-    ).pipe(
-        # Remove non-numeric entries
-        filter,
-        lambda x: x.isnumeric(),
-        _,
-    ).pipe(
-        # Add the mobile code to the start of 8-digit numbers
-        map,
-        lambda x: "04" + x if len(x) == 8 else x,
-        _,
-    ).pipe(
-        # Add the 0 to the start of 9-digit numbers
-        map,
-        lambda x: "0" + x if len(x) == 9 else x,
-        _,
-    ).pipe(
-        # Convert to a set to remove duplicates
-        set
-    ).eval() == {
-        "0491570156",
-        "0255507491",
-        "0493225813",
-        "1800975707",
-        "0455505488",
-    }
+def test_notebook():
+    # Ensure the notebook succeds
+    from nbconvert.nbconvertapp import main
+    main(['--to', 'markdown', '--execute', '--stdout', '../readme.ipynb'])
 
 
 def test_pipe_builtins():
