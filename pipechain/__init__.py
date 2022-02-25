@@ -3,18 +3,34 @@ from dataclasses import dataclass, field
 from functools import partial
 
 PLACEHOLDER = object()
+NO_INPUT = object()
+
+TPipeChain = typing.TypeVar("TPipeChain", bound="PipeChain")
+TPipeInput = typing.TypeVar("TPipeInput")
+TPipeOutput = typing.TypeVar("TPipeOutput")
+
+TNewPipeOutput = typing.TypeVar("TNewPipeOutput")
+
 
 @dataclass
-class PipeChain:
+class PipeChain(typing.Generic[TPipeInput, TPipeOutput]):
     """
     A pipeline of functions that will be applied one after the other
     """
     #: Optionally, the argument to use to start the pipeline
-    arg: typing.Optional[typing.Any] = None
-    # The list of functions compiled so far in the pipeline
-    pipes: typing.List[partial] = field(default_factory=list)
+    arg: TPipeInput
 
-    def pipe(self, func: typing.Callable, *args, **kwargs) -> 'PipeChain':
+    # The list of functions compiled so far in the pipeline
+    pipes: typing.List[partial]
+
+    def __init__(self, arg: TPipeInput = NO_INPUT, pipes: typing.List[partial]=None):
+        self.arg = arg
+        self.pipes = pipes or []
+
+    def pipe(self, func: typing.Callable[[TPipeOutput, ...], TNewPipeOutput], *args, **kwargs) -> TPipeChain[
+        TPipeInput,
+        TNewPipeOutput
+    ]:
         """
         Add a new function to the end of the pipeline
         :param func: The function to call
@@ -26,7 +42,8 @@ class PipeChain:
             the chain
         """
         part = partial(func, *args, **kwargs)
-        return PipeChain(arg=self.arg, pipes=self.pipes + [part])
+        cls = type(self)
+        return cls(arg=self.arg, pipes=self.pipes + [part])
 
     @staticmethod
     def hydrate_partial(liquid: typing.Any, part: partial) -> partial:
@@ -55,7 +72,7 @@ class PipeChain:
             args = [liquid] + args
         return partial(part.func, *args, **kwargs)
 
-    def eval(self, arg: typing.Optional[typing.Any] = None):
+    def eval(self, arg: typing.Optional[TPipeInput] = None) -> TPipeOutput:
         """
         Evaluates the pipe chain.
         :param arg: Optionally, an argument to feed into the pipe. If the pipe
