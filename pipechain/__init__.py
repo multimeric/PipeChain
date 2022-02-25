@@ -26,7 +26,7 @@ class PipeChain:
             the chain
         """
         part = partial(func, *args, **kwargs)
-        return PipeChain(arg=self.arg, pipes=self.pipes + [part])
+        return type(self)(arg=self.arg, pipes=self.pipes + [part])
 
     @staticmethod
     def hydrate_partial(liquid: typing.Any, part: partial) -> partial:
